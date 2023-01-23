@@ -1,12 +1,19 @@
 import { COMMANDS } from '../constants/commands.js';
 import { COMMAND_NOT_EXIST } from '../constants/errors.js';
 import { handleMouseMove } from '../mouse/mouseMove.js';
+import { getMousePosition } from '../mouse/getMousePosition.js';
+import { makePrintScreen } from '../print_screen/makePrintScreen.js';
 
 const COMMANDS_MAP = {
   [COMMANDS.MOUSE_UP]: handleMouseMove,
+  [COMMANDS.MOUSE_DOWN]: handleMouseMove,
+  [COMMANDS.MOUSE_LEFT]: handleMouseMove,
+  [COMMANDS.MOUSE_RIGHT]: handleMouseMove,
+  [COMMANDS.MOUSE_POSITION]: getMousePosition,
+  [COMMANDS.PRINT_SCREEN]: makePrintScreen,
 };
 
-const parseCommand = defaultCommand => {
+const parseCommand = (defaultCommand) => {
   const [command, ...commandArgs] = defaultCommand.split(' ');
 
   const isCommandExist = Object.values(COMMANDS).includes(command);
@@ -22,13 +29,9 @@ const parseCommand = defaultCommand => {
 };
 
 export const checkCommand = async (message) => {
-  console.log('CHECK COMMAND ***', message)
-
   const { command, commandArgs } = parseCommand(message);
-
   const handler = COMMANDS_MAP[command];
   const result = await handler(command, commandArgs);
 
-  console.log('COMMAND handler result ***', result)
-  // return result;
+  return result;
 };

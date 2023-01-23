@@ -1,19 +1,34 @@
 import { mouse, Point } from '@nut-tree/nut-js';
 import { COMMANDS } from '../constants/commands.js';
 
-
 const getMouseTrace = async (command, distance) => {
-  console.log('** points *** 1111', mouse)
   const currentPoint = await mouse.getPosition();
-  console.log('** points *** 222', currentPoint)
   const points = [];
 
-  if (command === COMMANDS.MOUSE_UP) {
-    points.push(new Point(currentPoint.x, currentPoint.y - distance));
-  }
+  switch (command) {
+    case COMMANDS.MOUSE_UP: {
+      points.push(new Point(currentPoint.x, currentPoint.y - distance));
 
-  console.log('** points *** ', points)
-  return points;
+      return points;
+    }
+    case COMMANDS.MOUSE_DOWN: {
+      points.push(new Point(currentPoint.x, currentPoint.y + distance));
+
+      return points;
+    }
+    case COMMANDS.MOUSE_LEFT: {
+      points.push(new Point(currentPoint.x - distance, currentPoint.y));
+
+      return points;
+    }
+    case COMMANDS.MOUSE_RIGHT: {
+      points.push(new Point(currentPoint.x + distance, currentPoint.y));
+
+      return points;
+    }
+    default:
+      return points;
+  }
 };
 
 const moveMouse = async (target) => {
@@ -21,10 +36,7 @@ const moveMouse = async (target) => {
 };
 
 export const handleMouseMove = async (command, distanceStr) => {
-  console.log('** points 333*** 11', command, distanceStr)
   const distance = Number(distanceStr);
-  console.log('** points 333*** 22', command, distanceStr)
   const points = await getMouseTrace(command, distance);
-  console.log('** points 333*** 33', points)
   moveMouse(points);
 };
