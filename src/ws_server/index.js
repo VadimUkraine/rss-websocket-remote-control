@@ -3,13 +3,27 @@ import { checkCommand } from './helpers/checkCommand.js';
 import { formateFrontMessage } from './helpers/formateFrontMessage.js';
 import { inputMessage } from './helpers/inputMessage.js';
 import { outputMessage } from './helpers/outputMessage.js';
+import { logError } from './helpers/logError.js';
 
 export const listenWebsocketServer = (port) => {
   const wss = new WebSocketServer({ port });
-  inputMessage(`WS Server started at port ${wss.options.port}`);
+  console.log(`WS Server started at port ${wss.options.port}`);
+
+  wss.on('close', () => {
+    console.log(
+      `My dear friend, websocket port ${wss.options.port} was closed`
+    );
+  });
+
+  process.on('SIGINT', () => {
+    console.log('\nFirewell!!!');
+
+    wss.close();
+    process.exit(0);
+  });
 
   wss.on('connection', (ws) => {
-    inputMessage(`Connected to Websocket Server at port ${wss.options.port}`);
+    console.log(`Connected to Websocket Server at port ${wss.options.port}`);
 
     const webSocketStream = createWebSocketStream(ws, { decodeStrings: false });
 
@@ -23,13 +37,12 @@ export const listenWebsocketServer = (port) => {
         if (response) {
           webSocketStream.write(response);
           outputMessage(response);
-          // console.log('*** here RESPONSE ***');
         } else {
           const frontMessage = formateFrontMessage(message);
           webSocketStream.write(frontMessage);
         }
       } catch (error) {
-        console.log('*** here handle ERROR ***', error);
+        logError(error, ws);
       }
     });
   });

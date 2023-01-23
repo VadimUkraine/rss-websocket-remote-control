@@ -3,6 +3,7 @@ import { COMMAND_NOT_EXIST } from '../constants/errors.js';
 import { handleMouseMove } from '../mouse/mouseMove.js';
 import { getMousePosition } from '../mouse/getMousePosition.js';
 import { makePrintScreen } from '../print_screen/makePrintScreen.js';
+import { handleDraw } from '../drawing/handleDraw.js';
 
 const COMMANDS_MAP = {
   [COMMANDS.MOUSE_UP]: handleMouseMove,
@@ -11,6 +12,9 @@ const COMMANDS_MAP = {
   [COMMANDS.MOUSE_RIGHT]: handleMouseMove,
   [COMMANDS.MOUSE_POSITION]: getMousePosition,
   [COMMANDS.PRINT_SCREEN]: makePrintScreen,
+  [COMMANDS.DRAW_CIRCLE]: handleDraw,
+  [COMMANDS.DRAW_RECTANGLE]: handleDraw,
+  [COMMANDS.DRAW_SQUARE]: handleDraw,
 };
 
 const parseCommand = (defaultCommand) => {

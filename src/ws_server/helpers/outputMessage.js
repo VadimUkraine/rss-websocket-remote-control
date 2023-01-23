@@ -1,3 +1,3 @@
 export const outputMessage = (message) => {
-  console.log(`<- ${message}`);
+  console.log(`-> ${message}`);
 };
